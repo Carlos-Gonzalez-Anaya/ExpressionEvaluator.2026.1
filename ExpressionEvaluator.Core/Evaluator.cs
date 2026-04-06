@@ -4,15 +4,17 @@ public class Evaluator
 {
     public static double Evaluate(string infix)
     {
-        var postfix = InfixToPostfix(infix);
+        var numbers = SeparateNumbers(infix);
+        var postfix = InfixToPostfix(numbers);
         return EvaluatePostfix(postfix);
     }
 
-    private static string InfixToPostfix(string infix)
+    private static List<string> InfixToPostfix(List<string> numbers)
     {
-        var postFix = string.Empty;
-        var stack = new Stack<char>();
-        foreach (var item in infix)
+        var postfix = new List<string>();
+        var stack = new Stack<string>();
+
+        foreach (var item in numbers)
         {
             if (IsOperator(item))
             {
@@ -22,12 +24,12 @@ public class Evaluator
                 }
                 else
                 {
-                    if (item == ')')
+                    if (item == ")")
                     {
                         do
                         {
-                            postFix += stack.Pop();
-                        } while (stack.Peek() != '(');
+                           postfix.Add(stack.Pop());
+                        } while (stack.Peek() != "(");
                         stack.Pop();
                     }
                     else
@@ -38,7 +40,7 @@ public class Evaluator
                         }
                         else
                         {
-                            postFix += stack.Pop();
+                            postfix.Add(stack.Pop());
                             stack.Push(item);
                         }
                     }
@@ -46,42 +48,42 @@ public class Evaluator
             }
             else
             {
-                postFix += item;
+                postfix.Add(item);
             }
         }
         while (stack.Count > 0)
         {
-            postFix += stack.Pop();
+            postfix.Add(stack.Pop());
         }
-        return postFix;
+        return postfix;
     }
 
-    private static int PriorityStack(char item) => item switch
+    private static int PriorityStack(string item) => item switch
     {
-        '^' => 3,
-        '*' => 2,
-        '/' => 2,
-        '+' => 1,
-        '-' => 1,
-        '(' => 0,
+        "^" => 3,
+        "*" => 2,
+        "/" => 2,
+        "+" => 1,
+        "-" => 1,
+        "(" => 0,
         _ => throw new Exception("Sintax error."),
     };
 
-    private static int PriorityInfix(char item) => item switch
+    private static int PriorityInfix(string item) => item switch
     {
-        '^' => 4,
-        '*' => 2,
-        '/' => 2,
-        '+' => 1,
-        '-' => 1,
-        '(' => 5,
+        "^" => 4,
+        "*" => 2,
+        "/" => 2,
+        "+" => 1,
+        "-" => 1,
+        "(" => 5,
         _ => throw new Exception("Sintax error."),
     };
 
-    private static double EvaluatePostfix(string postfix)
+    private static double EvaluatePostfix(List<string> postfix)
     {
         var stack = new Stack<double>();
-        foreach (char item in postfix)
+        foreach (var item in postfix)
         {
             if (IsOperator(item))
             {
@@ -89,21 +91,56 @@ public class Evaluator
                 var a = stack.Pop();
                 stack.Push(item switch
                 {
-                    '+' => a + b,
-                    '-' => a - b,
-                    '*' => a * b,
-                    '/' => a / b,
-                    '^' => Math.Pow(a, b),
+                    "+" => a + b,
+                    "-" => a - b,
+                    "*" => a * b,
+                    "/" => a / b,
+                    "^" => Math.Pow(a, b),
                     _ => throw new Exception("Sintax error."),
                 });
             }
             else
             {
-                stack.Push(double.Parse(item.ToString()));
+                stack.Push(double.Parse(item.Replace('.', ',')));
+
             }
         }
         return stack.Pop();
     }
 
-    private static bool IsOperator(char item) => "+-*/^()".Contains(item);
+    private static bool IsOperator(string item) => "+-*/^()".Contains(item);
+
+    private static List<string> SeparateNumbers(string infix)
+    {
+        var numbers = new List<string>();
+        string currentNumber = "";
+
+        foreach (var character in infix)
+        {
+            if (character == ' ')
+                continue;
+
+            if (IsOperator(character.ToString())&&character!='.')
+            {
+                if (!string.IsNullOrEmpty(currentNumber))
+                {
+                    numbers.Add(currentNumber);
+                    currentNumber = "";
+                }
+                numbers.Add(character.ToString());
+            }
+            else
+            {
+                currentNumber += character;
+            }
+        }
+
+        if (!string.IsNullOrEmpty(currentNumber))
+            numbers.Add(currentNumber);
+
+        return numbers;
+    }
+
+
+
 }

@@ -554,26 +554,50 @@
 
         private void button19_Click(object sender, EventArgs e)
         {
+            if (_resultadoCalculado)
+            {
+                DisplayTexto.Text = string.Empty;
+                _resultadoCalculado = false;
+            }
             DisplayTexto.Text += "0";
         }
 
         private void button20_Click(object sender, EventArgs e)
         {
+            if (_resultadoCalculado)
+            {
+                DisplayTexto.Text = string.Empty;
+                _resultadoCalculado = false;
+            }
             DisplayTexto.Text += ".";
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            DisplayTexto.Text = DisplayTexto.Text.Substring(0,DisplayTexto.Text.Length-1) ;
+            if (_resultadoCalculado) 
+            { DisplayTexto.Text = string.Empty; _resultadoCalculado = false; }
+            if (!string.IsNullOrEmpty(DisplayTexto.Text) && !_resultadoCalculado)
+                DisplayTexto.Text = DisplayTexto.Text.Substring(0, DisplayTexto.Text.Length - 1);
         }
 
         private void button9_Click(object sender, EventArgs e)
         {
+            if (_resultadoCalculado)
+            {
+                DisplayTexto.Text = string.Empty;
+                _resultadoCalculado = false;
+            }
             DisplayTexto.Text += "-";
         }
 
         private void button8_Click(object sender, EventArgs e)
         {
+            if (_resultadoCalculado)
+            {
+                DisplayTexto.Text = string.Empty;
+                _resultadoCalculado = false;
+                return;
+            }
             DisplayTexto.Text += "/";
         }
         #endregion
