@@ -117,8 +117,6 @@ public class Evaluator
 
         foreach (var character in infix)
         {
-            if (character == ' ')
-                continue;
 
             if (IsOperator(character.ToString())&&character!='.')
             {
