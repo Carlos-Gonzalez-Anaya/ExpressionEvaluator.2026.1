@@ -174,7 +174,7 @@ namespace ExpressionEvaluator.UI.Win
         private void button21_Click(object sender, EventArgs e)
         {
             _resultadoCalculado = true;
-            DisplayTexto.Text += $"={Evaluator.Evaluate(DisplayTexto.Text)}";
+            DisplayTexto.Text += $"={Evaluator.Evaluate(DisplayTexto.Text).ToString().Replace(',', '.')}";
         }
     }
 }
